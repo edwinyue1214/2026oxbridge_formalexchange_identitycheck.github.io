@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Great Cambridge–Oxford Formal Mystery · CB2 CCS</title>
+<meta name="description" content="据贝克街最新情报，本次 Formal 可能混入了一名神秘卧底。八项绝密调查，测出你属于哪一派。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f0b07;
+    --ink-2:#1c150e;
+    --paper:#f4e7cd;
+    --paper-2:#ecdcbb;
+    --paper-edge:#d9c39a;
+    --gold:#c9a227;
+    --gold-soft:#e0c46a;
+    --wax:#8b1f1f;
+    --holmes:#1f5c4a;
+    --moriarty:#8b1f1f;
+    --watson:#b07a1e;
+    --text:#2b2117;
+    --text-light:#e2d2b5;
+    --muted:#6b5b45;
+    --serif-en:"Playfair Display",Georgia,"Times New Roman",serif;
+    --serif-cn:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    min-height:100%;
+    background:#101414; /* Darker background like the image */
+    color:var(--text-light);
+    font-family:var(--serif-cn);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  .stage{
+    width:100%;
+    max-width:500px; /* More mobile-app like width */
+    height:100vh;
+    position:relative;
+    z-index:2;
+    background:#101414;
+    overflow-y:auto;
+  }
+
+  /* ---------- Splash Screen Styles ---------- */
+  .splash-header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 20px 10px;
+    font-family:var(--serif-en);
+  }
+  .splash-header .left{display:flex;align-items:center;gap:12px;}
+  .splash-header .left svg{width:20px;height:20px;color:var(--gold);}
+  .splash-header .left .info{display:flex;flex-direction:column;gap:2px;}
+  .splash-header .left .info .baker{font-size:16px;font-weight:900;letter-spacing:1px;color:#fff;}
+  .splash-header .left .info .baker span{font-size:10px;font-weight:400;margin-left:8px;color:rgba(255,255,255,.6);}
+  .splash-header .left .info .ccs{font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+  .splash-header .classified{
+    font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+    padding:4px 10px;border:1px solid rgba(255,255,255,.2);border-radius:20px;
+    display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);
+  }
+  .splash-header .classified::before{content:"";width:5px;height:5px;background:var(--gold);border-radius:50%;}
+
+  .splash-card-container{
+    padding:20px;
+  }
+  .invitation-card{
+    background:url("https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=aged%20paper%20texture%20vintage%20parchment%20background%20dark%20edges&image_size=portrait_4_3");
+    background-size:cover;
+    border-radius:4px;
+    padding:40px 20px;
+    text-align:center;
+    position:relative;
+    box-shadow:0 20px 40px rgba(0,0,0,.6);
+    color:var(--text);
+  }
+  .invitation-card .private{font-family:var(--serif-en);font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.6;margin-bottom:10px;}
+  .invitation-card .big-221b{font-family:var(--serif-en);font-size:80px;font-weight:900;line-height:1;margin:10px 0;}
+  .invitation-card .line-decor{width:80px;height:1px;background:var(--text);margin:20px auto;opacity:.3;position:relative;}
+  .invitation-card .line-decor::after{content:"✦";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--paper);padding:0 8px;font-size:10px;}
+  .invitation-card .req{font-family:var(--serif-en);font-size:12px;letter-spacing:3px;text-transform:uppercase;line-height:2;margin-bottom:30px;}
+  .invitation-card .wax-seal{
+    width:56px;height:56px;background:var(--wax);border-radius:50%;margin:0 auto 20px;
+    display:grid;place-items:center;font-family:var(--serif-en);font-size:28px;color:rgba(255,255,255,.7);
+    box-shadow:inset 0 0 10px rgba(0,0,0,.4), 0 4px 8px rgba(0,0,0,.3);
+    position:relative;
+  }
+  .invitation-card .case-no{position:absolute;bottom:12px;right:20px;font-family:var(--serif-en);font-size:9px;letter-spacing:1px;opacity:.5;}
+
+  .splash-content{
+    padding:0 24px 40px;
+  }
+  .splash-content .invite-line{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:20px;}
+  .splash-content .invite-line::before{content:"";width:24px;height:1px;background:var(--gold);}
+  .splash-content h2{font-size:42px;font-weight:900;color:var(--text-light);margin:0 0 12px;letter-spacing:4px;}
+  .splash-content .mystery-title{font-family:var(--serif-en);font-style:italic;font-size:16px;color:var(--gold-soft);margin-bottom:24px;opacity:.8;}
+  .splash-content .desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,.7);margin-bottom:30px;letter-spacing:.5px;}
+  .splash-content .stats{display:flex;gap:15px;margin-bottom:40px;}
+  .splash-content .stat-item{font-size:12px;color:rgba(255,255,255,.6);letter-spacing:1px;}
+  .splash-content .stat-item b{color:var(--gold);margin-right:4px;font-family:var(--serif-en);}
+
+  .splash-btn{
+    width:100%;background:linear-gradient(90deg, #d9b87a, #a68a56);
+    color:#101414;font-weight:900;font-size:16px;letter-spacing:2px;
+    padding:20px;border:none;border-radius:2px;cursor:pointer;
+    display:flex;justify-content:center;align-items:center;gap:12px;
+    transition:transform .2s;
+  }
+  .splash-btn:active{transform:scale(.98);}
+
+  .screen{display:none;animation:fadeIn .6s ease both;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  /* ---------- existing card override for mobile ---------- */
+  .card{
+    background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%);
+    margin:20px;
+    padding:30px 20px;
+  }
+  .card::before{
+    content:"";
+    position:absolute;inset:10px;
+    border:1px solid rgba(120,95,55,.28);
+    border-radius:2px;
+    pointer-events:none;
+  }
+  .card::after{
+    content:"";
+    position:absolute;inset:0;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.55'/%3E%3C/svg%3E");
+    opacity:.06;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+  }
+  .card > *{position:relative;z-index:2;}
+
+  /* corner rivets */
+  .rivet{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0e0b8,#a98a4e 70%,#7a6234);box-shadow:0 1px 1px rgba(0,0,0,.4);}
+  .rivet.tl{top:14px;left:14px;} .rivet.tr{top:14px;right:14px;}
+  .rivet.bl{bottom:14px;left:14px;} .rivet.br{bottom:14px;right:14px;}
+
+  /* ---------- header strips ---------- */
+  .filehead{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-family:var(--serif-en);
+    font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:#7a6647;
+    border-bottom:1px dashed rgba(120,95,55,.45);
+    padding-bottom:12px;margin-bottom:22px;
+  }
+  .filehead .stamp{
+    color:var(--wax);
+    border:1.5px solid var(--wax);
+    border-radius:3px;
+    padding:2px 8px;
+    letter-spacing:.18em;
+    transform:rotate(-3deg);
+    font-weight:700;
+    opacity:.9;
+  }
+
+  .eyebrow{
+    font-family:var(--serif-en);
+    font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--gold);
+    text-align:center;margin:0 0 10px;
+  }
+  h1{
+    font-family:var(--serif-en);
+    font-weight:900;
+    font-size:clamp(27px,5.4vw,44px);
+    line-height:1.08;
+    text-align:center;
+    margin:0 0 6px;
+    color:#241a10;
+    letter-spacing:.005em;
+  }
+  h1 .amp{color:var(--wax);font-style:italic;}
+  .sub{
+    text-align:center;
+    font-family:var(--serif-cn);
+    font-size:14px;letter-spacing:.16em;
+    color:var(--muted);
+    margin:2px 0 0;
+  }
+
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    margin:22px 0;
+    color:#a8916a;
+  }
+  .divider::before,.divider::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(120,95,55,.6),transparent);
+  }
+  .divider svg{width:18px;height:18px;flex:none;opacity:.75;}
+
+  .lede{
+    font-size:15px;line-height:1.95;
+    color:#3b2e20;
+    text-align:center;
+    margin:0 auto 20px;
+    max-width:60ch;
+  }
+  .lede strong{color:var(--wax);font-weight:600;}
+
+  /* ---------- faction preview ---------- */
+  .factions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:0 0 26px;
+  }
+  .fac{
+    background:rgba(255,255,255,.34);
+    border:1px solid rgba(120,95,55,.32);
+    border-radius:3px;
+    padding:12px 8px 13px;
+    text-align:center;
+  }
+  .fac .em{font-size:22px;line-height:1;display:block;margin-bottom:7px;}
+  .fac .nm{font-size:12.5px;font-weight:600;letter-spacing:.03em;color:#3a2c1d;line-height:1.45;}
+  .fac .tg{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.04em;}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:block;width:100%;
+    font-family:var(--serif-cn);
+    font-size:16px;font-weight:600;letter-spacing:.14em;
+    color:#f7edd6;
+    background:linear-gradient(180deg,#3a2b1b,#241a10);
+    border:1px solid #5a4529;
+    border-radius:3px;
+    padding:15px 18px;
+    cursor:pointer;
+    transition:transform .15s ease,box-shadow .2s ease,background .2s ease;
+    box-shadow:0 8px 18px -10px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .btn:hover{transform:translateY(-1px);background:linear-gradient(180deg,#473423,#2b1f12);box-shadow:0 14px 26px -12px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.16);}
+  .btn:active{transform:translateY(0);}
+  .btn.ghost{
+    background:transparent;color:#4a3a26;border:1px solid rgba(120,95,55,.6);
+    box-shadow:none;font-weight:500;font-size:14px;padding:12px;
+  }
+  .btn.ghost:hover{background:rgba(120,95,55,.09);}
+
+  /* ---------- quiz ---------- */
+  .qtop{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:var(--serif-en);
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8a7454;
+    margin-bottom:12px;
+  }
+  .qcount b{color:var(--wax);font-weight:700;}
+  .track{
+    display:flex;gap:5px;margin-bottom:24px;
+  }
+  .track i{
+    flex:1;height:5px;border-radius:2px;
+    background:rgba(120,95,55,.22);
+    transition:background .35s ease, box-shadow .35s ease;
+  }
+  .track i.done{background:linear-gradient(90deg,#8b6c2e,#c9a227);box-shadow:0 0 8px rgba(201,162,39,.45);}
+  .track i.cur{background:rgba(139,31,31,.55);}
+
+  .qtitle{
+    display:flex;align-items:center;gap:10px;
+    font-size:22px;font-weight:900;color:#241a10;margin:0 0 14px;
+    letter-spacing:.02em;
+  }
+  .qtitle svg{width:22px;height:22px;flex:none;color:var(--wax);}
+  .qscene{
+    font-size:15.5px;line-height:1.95;color:#3b2e20;
+    margin:0 0 6px;
+  }
+  .qask{
+    font-size:14px;color:var(--wax);letter-spacing:.08em;margin:14px 0 14px;font-weight:600;
+  }
+
+  .opts{display:flex;flex-direction:column;gap:11px;}
+  .opt{
+    display:flex;align-items:flex-start;gap:13px;
+    width:100%;text-align:left;
+    background:rgba(255,255,255,.42);
+    border:1px solid rgba(120,95,55,.35);
+    border-radius:3px;
+    padding:14px 16px;
+    cursor:pointer;
+    font-family:var(--serif-cn);
+    font-size:15px;line-height:1.7;color:#31261a;
+    transition:transform .13s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .opt:hover{
+    background:#fffdf6;
+    border-color:var(--gold);
+    transform:translateX(3px);
+    box-shadow:0 8px 20px -12px rgba(0,0,0,.55);
+  }
+  .opt .key{
+    flex:none;
+    width:26px;height:26px;border-radius:50%;
+    display:grid;place-items:center;
+    font-family:var(--serif-en);font-size:13px;font-weight:700;
+    color:#f4e7cd;
+    background:radial-gradient(circle at 35% 30%,#a83434,#7a1a1a);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 4px rgba(0,0,0,.3);
+    margin-top:1px;
+  }
+  .opt.chosen{background:#fffdf6;border-color:var(--gold);}
+  .opt.chosen .key{background:radial-gradient(circle at 35% 30%,#d7b34a,#a9861f);color:#2c2113;}
+
+  .qnav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;}
+  .back{
+    background:none;border:none;cursor:pointer;
+    font-family:var(--serif-cn);font-size:13px;color:var(--muted);
+    letter-spacing:.1em;padding:6px 2px;
+  }
+  .back:hover{color:var(--wax);}
+  .back[disabled]{opacity:.3;cursor:default;}
+
+  /* ---------- result ---------- */
+  .verdict{
+    text-align:center;
+  }
+  .verdict .closed{
+    display:inline-block;
+    font-family:var(--serif-en);
+    font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--wax);border:1.5px solid var(--wax);
+    padding:3px 12px;border-radius:3px;
+    transform:rotate(-2deg);
+    margin-bottom:20px;
+    opacity:0;animation:stamp .6s .15s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes stamp{from{opacity:0;transform:rotate(-14deg) scale(1.9);}to{opacity:.95;transform:rotate(-2deg) scale(1);}}
+
+  .emblem{
+    width:118px;height:118px;margin:0 auto 16px;
+    display:grid;place-items:center;
+    border-radius:50%;
+    border:2px solid currentColor;
+    position:relative;
+    opacity:0;animation:emblemIn .7s .25s cubic-bezier(.2,1.2,.35,1) both;
+  }
+  .emblem::before{
+    content:"";position:absolute;inset:7px;border-radius:50%;
+    border:1px dashed currentColor;opacity:.45;
+  }
+  .emblem svg{width:60px;height:60px;}
+  @keyframes emblemIn{from{opacity:0;transform:scale(.7) rotate(-12deg);}to{opacity:1;transform:none;}}
+
+  .vlabel{
+    font-family:var(--serif-en);font-size:11.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:#8a7454;margin-bottom:8px;
+  }
+  .vname{
+    font-size:clamp(22px,4.6vw,30px);font-weight:900;color:#241a10;margin:0 0 8px;letter-spacing:.02em;
+  }
+  .vtag{
+    font-size:13.5px;letter-spacing:.14em;color:var(--muted);margin:0 0 20px;
+  }
+  .vdesc{
+    font-size:15px;line-height:2.05;color:#3b2e20;text-align:left;
+    max-width:56ch;margin:0 auto 24px;
+    background:rgba(255,255,255,.34);
+    border-left:3px solid currentColor;
+    border-radius:2px;
+    padding:16px 18px;
+  }
+  .vdesc .hl{font-weight:600;}
+
+  .meters{max-width:52ch;margin:0 auto 26px;text-align:left;}
+  .meters h4{
+    font-family:var(--serif-cn);font-size:12px;font-weight:600;
+    letter-spacing:.22em;color:#8a7454;margin:0 0 12px;text-align:center;
+  }
+  .meter{margin-bottom:11px;}
+  .meter .row{display:flex;justify-content:space-between;font-size:12.5px;color:#4a3a26;margin-bottom:5px;letter-spacing:.04em;}
+  .meter .bar{height:7px;border-radius:4px;background:rgba(120,95,55,.2);overflow:hidden;}
+  .meter .fill{height:100%;width:0;border-radius:4px;transition:width 1s cubic-bezier(.2,.8,.2,1);}
+
+  .foot{
+    text-align:center;margin-top:20px;
+    font-family:var(--serif-en);
+    font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;
+    color:#6b5f4a;opacity:.8;
+  }
+  .foot .dot{color:var(--gold);}
+
+  @media (max-width:560px){
+    .card{padding:24px 18px 22px;}
+    .fac{padding:10px 5px 11px;}
+    .fac .nm{font-size:11px;}
+    .fac .tg{font-size:10px;}
+    .qtitle{font-size:19px;}
+    .qscene{font-size:14.5px;}
+    .opt{font-size:14px;padding:12px 13px;gap:10px;}
+    .filehead{font-size:10px;letter-spacing:.14em;}
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- ============ SPLASH SCREEN (NEW) ============ -->
+  <section id="screen-splash" class="screen active">
+    <div class="splash-header">
+      <div class="left">
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round">
+          <circle cx="42" cy="42" r="26"/><line x1="61" y1="61" x2="84" y2="84"/>
+        </svg>
+        <div class="info">
+          <div class="baker">221B<span>BAKER STREET</span></div>
+          <div class="ccs">CCS × OUCS · CASE CB2</div>
+        </div>
+      </div>
+      <div class="classified">Classified</div>
+    </div>
+
+    <div class="splash-card-container">
+      <div class="invitation-card">
+        <div class="private">Private & Confidential</div>
+        <div class="big-221b">221B</div>
+        <div class="line-decor"></div>
+        <div class="req">Your presence has<br>been requested</div>
+        <div class="big-221b" style="font-size:12px;letter-spacing:4px;margin-bottom:30px;">THE GAME IS AFOOT</div>
+        <div class="wax-seal">S</div>
+        <div class="case-no">CASE NO. CB2—CCS</div>
+      </div>
+    </div>
+
+    <div class="splash-content">
+      <div class="invite-line">Confidential Invitation · 2026</div>
+      <h2>贝克街<br>绝密档案</h2>
+      <div class="mystery-title">The Great Cambridge–Oxford Formal Mystery</div>
+      <p class="desc">
+        据贝克街最新情报，本次 Formal 可能混入了一名神秘卧底。以下是八项绝密调查，请凭第一直觉作答。调查结束，你将收到自己的专属阵营档案。
+      </p>
+      <div class="stats">
+        <div class="stat-item"><b>08</b>项绝密调查</div>
+        <div class="stat-item"><b>03</b>个神秘阵营</div>
+        <div class="stat-item"><b>01</b>份身份档案</div>
+      </div>
+      <button class="splash-btn" id="splashBtn">
+        拆开密函 · 开始调查 <span style="font-size:20px;">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ INTRO ============ -->
+  <section id="screen-intro" class="screen">
+    <div class="card">
+      <span class="rivet tl"></span><span class="rivet tr"></span><span class="rivet bl"></span><span class="rivet br"></span>
+
+      <div class="filehead">
+        <span>CASE FILE · CB2 CCS</span>
+        <span class="stamp">TOP SECRET</span>
+      </div>
+
+      <p class="eyebrow">Baker Street Intelligence Bureau</p>
+      <h1>The Great Cambridge<span class="amp">–</span>Oxford<br>Formal Mystery</h1>
+      <p class="sub">牛剑 Formal 之夜的卧底疑案</p>
+
+      <div class="divider">
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
+          <circle cx="42" cy="42" r="26"/><line x1="61" y1="61" x2="84" y2="84"/>
+        </svg>
+      </div>
+
+      <p class="lede">
+        据贝克街最新情报，本次 Formal 可能混入了<strong>一名神秘卧底</strong>。<br>
+        以下是八项绝密调查，请凭<strong>第一直觉</strong>作答。
+      </p>
+
+      <div class="factions">
+        <div class="fac">
+          <span class="em">🔎</span>
+          <div class="nm">福尔摩斯的<br>秘密探员</div>
+          <div class="tg">研究和推理</div>
+        </div>
+        <div class="fac">
+          <span class="em">🎭</span>
+          <div class="nm">莫里亚蒂的<br>在逃同伙</div>
+          <div class="tg">社交和整活</div>
+        </div>
+        <div class="fac">
+          <span class="em">🍮</span>
+          <div class="nm">华生的<br>摸鱼搭子</div>
+          <div class="tg">享受和吃瓜</div>
+        </div>
+      </div>
+
+      <button class="btn" id="startBtn">开始调查</button>
+      <div class="foot">CASE CB2 CCS <span class="dot">·</span> 8 INVESTIGATIONS <span class="dot">·</span> 请凭直觉作答</div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="card">
+      <span class="rivet tl"></span><span class="rivet tr"></span><span class="rivet bl"></span><span class="rivet br"></span>
+
+      <div class="qtop">
+        <span>Investigation</span>
+        <span class="qcount"><b id="qNow">1</b> / 8</span>
+      </div>
+      <div class="track" id="track"></div>
+
+      <h2 class="qtitle">
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+          <circle cx="42" cy="42" r="26"/><line x1="61" y1="61" x2="84" y2="84"/>
+        </svg>
+        <span id="qTitle"></span>
+      </h2>
+      <p class="qscene" id="qScene"></p>
+      <p class="qask" id="qAsk"></p>
+
+      <div class="opts" id="opts"></div>
+
+      <div class="qnav">
+        <button class="back" id="backBtn">← 上一题</button>
+        <span class="back" style="opacity:.55">凭直觉选择即可</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="screen">
+    <div class="card">
+      <span class="rivet tl"></span><span class="rivet tr"></span><span class="rivet bl"></span><span class="rivet br"></span>
+
+      <div class="verdict">
+        <div class="closed" id="closedStamp">Case Closed</div>
+
+        <div class="emblem" id="emblem"></div>
+
+        <div class="vlabel">你的身份是</div>
+        <h3 class="vname" id="vName"></h3>
+        <p class="vtag" id="vTag"></p>
+
+        <div class="vdesc" id="vDesc"></div>
+
+        <div class="meters">
+          <h4>线索倾向</h4>
+          <div class="meter">
+            <div class="row"><span>🔎 福尔摩斯的秘密探员</span><span id="mPct1">0%</span></div>
+            <div class="bar"><div class="fill" id="mBar1" style="background:linear-gradient(90deg,#2f7a62,#1f5c4a)"></div></div>
+          </div>
+          <div class="meter">
+            <div class="row"><span>🎭 莫里亚蒂的在逃同伙</span><span id="mPct2">0%</span></div>
+            <div class="bar"><div class="fill" id="mBar2" style="background:linear-gradient(90deg,#b03636,#7a1a1a)"></div></div>
+          </div>
+          <div class="meter">
+            <div class="row"><span>🍮 华生的摸鱼搭子</span><span id="mPct3">0%</span></div>
+            <div class="bar"><div class="fill" id="mBar3" style="background:linear-gradient(90deg,#d1a03c,#b07a1e)"></div></div>
+          </div>
+        </div>
+
+        <button class="btn ghost" id="restartBtn">重新调查一次</button>
+      </div>
+
+      <div class="foot">CASE CB2 CCS <span class="dot">·</span> THE GREAT CAMBRIDGE–OXFORD FORMAL MYSTERY</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =================== 数据：题目与计分规则（来自🔎 CASE 测试题.docx） =================== */
+const QUESTIONS = [
+  {
+    title:"空杯疑云",
+    scene:"Formal 刚开场，三张长桌中只有一桌的酒杯全部满上，另外两桌却空空如也。酒单上还多了一句：智商高的那桌自己想办法。",
+    ask:"你的第一反应？",
+    options:[
+      {text:"拍照取证，向 CCS/OUCS 学生会主席团告状。", f:"holmes"},
+      {text:"跟服务员说自己其实是 fellow。", f:"moriarty"},
+      {text:"先问满杯那桌要一杯，高智商的人靠自己喝到酒。", f:"moriarty"},
+      {text:"举起空杯优雅敬酒，反正没人知道里面有没有酒。", f:"watson"}
+    ]
+  },
+  {
+    title:"甜点上的诅咒",
+    scene:"你发现给你上的甜点上刻了一行字：Your essay sucks. 更恐怖的是，这和你昨天收到的导师（supervision）评语一模一样。",
+    ask:"你会？",
+    options:[
+      {text:"研究酱料笔迹，确认 Supervisor 是否潜伏在场。", f:"holmes"},
+      {text:"三口吃完，物理消灭学术焦虑。", f:"watson"},
+      {text:"悄咪咪把布丁换给对面学校的同学。", f:"moriarty"},
+      {text:"不慌，先拍照发朋友圈。", f:"watson"}
+    ]
+  },
+  {
+    title:"跟住那个人",
+    scene:"你去调查刚才的失踪事件，却发现座位表上多了一行手写字：“跟住 ______，他知道得太多了。”",
+    ask:"你决定先跟踪：",
+    options:[
+      {text:"全场着装最符合主题的人。", f:"watson"},
+      {text:"全场最有推理天赋的人。", f:"holmes"},
+      {text:"全场最强社交达人。", f:"moriarty"},
+      {text:"全场最搞笑的人。", f:"moriarty"}
+    ]
+  },
+  {
+    title:"走廊里的证物",
+    scene:"你跟着嫌疑人走到走廊尽头，对方突然消失。地上只留下了一件东西。",
+    ask:"你认为最有可能揭开真相的是：",
+    options:[
+      {text:"一碗忘情牛肉面。", f:"watson"},
+      {text:"一张肥嘟嘟的学生会联合报销单。", f:"moriarty"},
+      {text:"essay paper。", f:"holmes"},
+      {text:"一瓶大水。", f:"watson"}
+    ]
+  },
+  {
+    title:"审讯外联部",
+    scene:"福尔摩斯终于批准你审讯 CCS/OUCS 外联部，但由于活动时间不够，你只能问一个问题。",
+    ask:"你会问：",
+    options:[
+      {text:"这个部门卡颜吗，为什么都是俊男靓女？", f:"holmes"},
+      {text:"下次还办这个活动我能蹭吃蹭喝吗？", f:"watson"},
+      {text:"雅思没到 7.5 能加入剑桥/牛津薄肌俱乐部吗？", f:"moriarty"},
+      {text:"明年还办吗？我想提前申请成为嫌疑人。", f:"moriarty"}
+    ]
+  },
+  {
+    title:"寻找神秘卧底",
+    scene:"一张匿名纸条传遍三张长桌：卧底只会主动接近今晚最不像正常人的人。",
+    ask:"为了让卧底暴露，你决定？",
+    options:[
+      {text:"打电话给 crush 表白。", f:"moriarty"},
+      {text:"站起来跳一个闪身步。", f:"moriarty"},
+      {text:"掏出电脑写 essay。", f:"holmes"},
+      {text:"继续安静干饭。真正的高手从不主动暴露实力。", f:"watson"}
+    ]
+  },
+  {
+    title:"线索交换条件",
+    scene:"有人递给你一封信：交出你掌握的线索，我们可以实现你一个愿望。",
+    ask:"你只能选一个：",
+    options:[
+      {text:"获得牛剑互怼的全部黑历史，包括不能公开的部分。", f:"holmes"},
+      {text:"获得终身免费 Formal 权限，附带酒水无限续杯。", f:"watson"},
+      {text:"CCS/OUCS 的贵宾服务体验。", f:"watson"},
+      {text:"获得一张 Supervision/Tutorial 免罪金牌，任何不交作业都可以无条件赦免。", f:"moriarty"}
+    ]
+  },
+  {
+    title:"最后的指认",
+    scene:"你交出了线索。福尔摩斯宣布：导致今晚 Formal 失控的幕后黑手，已经锁定在四组嫌疑人之中。",
+    ask:"你押谁？",
+    options:[
+      {text:"Cambridge Supervision 导师团。", f:"watson"},
+      {text:"Oxford Tutorial 导师团。", f:"watson"},
+      {text:"CCS/OUCS 主席。", f:"holmes"},
+      {text:"福尔摩斯本人。", f:"moriarty"}
+    ]
+  }
+];
+
+/* =================== 三派定义 =================== */
+const FACTIONS = {
+  holmes:{
+    name:"福尔摩斯的秘密探员",
+    tag:"推理至上 · 细节控 · 全场最清醒",
+    color:"#1f5c4a",
+    svg:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><circle cx="42" cy="42" r="25"/><line x1="60" y1="60" x2="84" y2="84"/><path d="M31 42 a11 11 0 0 1 11 -11" opacity=".55"/></svg>',
+    desc:'你天生自带放大镜，任何蛛丝马迹都逃不过你的眼睛。别人在拍照，你在分析；别人在寒暄，你在还原案发现场。当三张长桌只有一桌满上酒时，你是全场第一个意识到“这不对劲”的人。<span class="hl">今晚的谜题，大概率要靠你来破。</span>'
+  },
+  moriarty:{
+    name:"莫里亚蒂的在逃同伙",
+    tag:"社交悍匪 · 整活大师 · 混乱制造者",
+    color:"#8b1f1f",
+    svg:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><g opacity=".95"><line x1="50" y1="50" x2="50" y2="12"/><line x1="50" y1="50" x2="76.9" y2="23.1"/><line x1="50" y1="50" x2="88" y2="50"/><line x1="50" y1="50" x2="76.9" y2="76.9"/><line x1="50" y1="50" x2="50" y2="88"/><line x1="50" y1="50" x2="23.1" y2="76.9"/><line x1="50" y1="50" x2="12" y2="50"/><line x1="50" y1="50" x2="23.1" y2="23.1"/></g><g><polygon points="64,50 60,60 50,64 40,60 36,50 40,40 50,36 60,40"/><polygon points="76,50 68.4,68.4 50,76 31.6,68.4 24,50 31.6,31.6 50,24 68.4,31.6"/><polygon points="88,50 76.9,76.9 50,88 23.1,76.9 12,50 23.1,23.1 50,12 76.9,23.1"/></g></svg>',
+    desc:'你是全场的节奏制造者，走到哪里，哪里就有惊喜（以及锅）。你擅长把一场 formal 变成一段传奇——一次闪身步、一个眼神、一句骚话，就足以搅动三张长桌。<span class="hl">卧底最想招募的人才是你，最大的嫌疑人也是你。</span>'
+  },
+  watson:{
+    name:"华生的摸鱼搭子",
+    tag:"干饭第一 · 吃瓜专家 · 情绪稳定",
+    color:"#b07a1e",
+    svg:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M26 44 h48 v12 a24 24 0 0 1 -48 0 z"/><path d="M74 47 h5 a10 10 0 0 1 0 20 h-5"/><path d="M42 33 c0 -5 6 -5 6 -11"/><path d="M54 33 c0 -5 6 -5 6 -11"/><path d="M20 84 h60"/></svg>',
+    desc:'你信奉人生苦短、甜点当前。案子可以让福尔摩斯去破，热闹可以让莫里亚蒂去凑，而你负责优雅地把布丁吃完，再发一条朋友圈。<span class="hl">你是这场晚宴里最会生活、也最不容易上头的人。</span>'
+  }
+};
+
+const ORDER = ["holmes","moriarty","watson"];
+const KEYS = ["A","B","C","D"];
+
+/* =================== 状态 =================== */
+let idx = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+
+/* =================== DOM =================== */
+const $ = id => document.getElementById(id);
+const screens = {splash:$("screen-splash"), intro:$("screen-intro"), quiz:$("screen-quiz"), result:$("screen-result")};
+function show(name){
+  Object.values(screens).forEach(s=>s.classList.remove("active"));
+  screens[name].classList.add("active");
+  $("stage").scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =================== 题库渲染 =================== */
+function buildTrack(){
+  $("track").innerHTML = QUESTIONS.map(()=>"<i></i>").join("");
+}
+function paintTrack(){
+  const bars = $("track").children;
+  for(let i=0;i<bars.length;i++){
+    bars[i].className = i < idx ? "done" : (i === idx ? "cur" : "");
+  }
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[idx];
+  $("qNow").textContent = idx + 1;
+  $("qTitle").textContent = q.title;
+  $("qScene").textContent = q.scene;
+  $("qAsk").textContent = q.ask;
+
+  const box = $("opts");
+  box.innerHTML = "";
+  q.options.forEach((opt,i)=>{
+    const b = document.createElement("button");
+    b.className = "opt" + (answers[idx] === i ? " chosen" : "");
+    b.innerHTML = '<span class="key">' + KEYS[i] + '</span><span>' + opt.text + '</span>';
+    b.addEventListener("click", ()=>choose(i));
+    box.appendChild(b);
+  });
+
+  $("backBtn").disabled = idx === 0;
+  paintTrack();
+}
+
+function choose(i){
+  answers[idx] = i;
+  // 轻微延迟让选中态可见，再进入下一题
+  const btns = $("opts").children;
+  if(btns[i]) btns[i].classList.add("chosen");
+  setTimeout(()=>{
+    if(idx < QUESTIONS.length - 1){ idx++; renderQuestion(); }
+    else finish();
+  }, 240);
+}
+
+/* =================== 计分 =================== */
+function tally(){
+  const score = {holmes:0, moriarty:0, watson:0};
+  QUESTIONS.forEach((q,i)=>{
+    const a = answers[i];
+    if(a === null) return;
+    score[q.options[a].f] += 1;
+  });
+  return score;
+}
+function winnerOf(score){
+  return ORDER.slice().sort((a,b)=>{
+    if(score[b] !== score[a]) return score[b] - score[a];
+    return ORDER.indexOf(a) - ORDER.indexOf(b); // 平票：福 → 莫 → 华
+  })[0];
+}
+
+/* =================== 结果 =================== */
+function finish(){
+  const score = tally();
+  const key = winnerOf(score);
+  const fac = FACTIONS[key];
+  const total = QUESTIONS.length;
+
+  const emblem = $("emblem");
+  emblem.style.color = fac.color;
+  emblem.innerHTML = fac.svg;
+
+  $("vName").textContent = fac.name;
+  $("vName").style.color = fac.color;
+  $("vTag").textContent = fac.tag;
+  $("vDesc").innerHTML = fac.desc;
+  $("vDesc").style.color = fac.color;
+
+  const ids = ["holmes","moriarty","watson"];
+  ids.forEach((k,n)=>{
+    const pct = Math.round(score[k] / total * 100);
+    $("mPct"+(n+1)).textContent = pct + "%";
+    const bar = $("mBar"+(n+1));
+    bar.style.width = "0%";
+    setTimeout(()=>{ bar.style.width = Math.max(pct,2) + "%"; }, 120 + n*110);
+  });
+
+  show("result");
+}
+
+/* =================== 事件 =================== */
+$("splashBtn").addEventListener("click", ()=>{
+  show("intro");
+});
+$("startBtn").addEventListener("click", ()=>{
+  idx = 0;
+  answers.fill(null);
+  buildTrack();
+  renderQuestion();
+  show("quiz");
+});
+$("backBtn").addEventListener("click", ()=>{
+  if(idx > 0){ idx--; renderQuestion(); }
+});
+$("restartBtn").addEventListener("click", ()=>{
+  idx = 0;
+  answers.fill(null);
+  buildTrack();
+  renderQuestion();
+  show("quiz");
+});
+
+buildTrack();
+</script>
+</body>
+</html>
